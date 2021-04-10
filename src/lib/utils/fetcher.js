@@ -32,6 +32,9 @@ const API = {
 
   async create(data) {
     const request = fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -41,6 +44,9 @@ const API = {
   async update(data) {
     const request = fetch(`${url}/${data.id}`, {
       method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(data),
     });
     return await call(request);

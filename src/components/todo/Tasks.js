@@ -10,7 +10,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { ToDoStore } from '../../lib/store/todo';
 import API from '../../lib/utils/fetcher';
 
-const Tasks = () => {
+const Tasks = ({ tab }) => {
   const todos = ToDoStore(state => state.todos);
   const { updateList } = ToDoStore.getState();
   const [checked, setChecked] = React.useState([0]);
@@ -42,7 +42,7 @@ const Tasks = () => {
 
   return (
     <List>
-      {todos.map((item) => {
+      {todos.filter(t => t.done === !!tab).map((item) => {
         const labelId = `checkbox-list-label-${item.id}`;
         return (
           <ListItem key={item.id} dense button onClick={handleToggle(item)}>
@@ -50,7 +50,7 @@ const Tasks = () => {
               <Checkbox
                 edge="start"
                 onChange={() => markDone(item)}
-                // checked={checked.indexOf(item) !== -1}
+                checked={item.done}
                 tabIndex={-1}
                 disableRipple
                 inputProps={{ 'aria-labelledby': labelId }}
