@@ -10,15 +10,15 @@ import API from '../lib/utils/fetcher';
 const ToDo = () => {
   const [tab, setTab] = useState(0);
   const [currentItem, setCurrentItem] = useState(null);
-  const { updateList } = ToDoStore.getState();
 
   useEffect(() => {
+    function fetchTodos() {
+      const { updateList } = ToDoStore.getState();
+      API.getAll().then((res) => updateList(res));
+    }
+
     fetchTodos();
   }, []);
-
-  const fetchTodos = () => {
-    API.getAll().then(res => updateList(res));
-  };
 
   const changeTab = (current) => {
     setTab(current);
