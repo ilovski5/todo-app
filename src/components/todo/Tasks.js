@@ -10,22 +10,12 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { ToDoStore } from '../../lib/store/todo';
 import API from '../../lib/utils/fetcher';
 
-const Tasks = ({ tab }) => {
+const Tasks = ({ tab, editItem }) => {
   const todos = ToDoStore(state => state.todos);
   const { updateList } = ToDoStore.getState();
-  const [checked, setChecked] = React.useState([0]);
 
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
+  const handleToggle = (item) => {
+    editItem(item);
   };
 
   const removeTask = async (id) => {
@@ -34,7 +24,8 @@ const Tasks = ({ tab }) => {
     updateList(all);
   };
 
-  const markDone = async (item) => {
+  const markDone = async (event, item) => {
+    event.stopPropagation();
     await API.update({ ...item, done: !item.done });
     const all = await API.getAll();
     updateList(all);
@@ -43,20 +34,18 @@ const Tasks = ({ tab }) => {
   return (
     <List>
       {todos.filter(t => t.done === !!tab).map((item) => {
-        const labelId = `checkbox-list-label-${item.id}`;
         return (
-          <ListItem key={item.id} dense button onClick={handleToggle(item)}>
+          <ListItem key={item.id} dense button onClick={() => handleToggle(item)}>
             <ListItemIcon>
               <Checkbox
                 edge="start"
-                onChange={() => markDone(item)}
+                onClick={(event) => markDone(event, item)}
                 checked={item.done}
                 tabIndex={-1}
                 disableRipple
-                inputProps={{ 'aria-labelledby': labelId }}
               />
             </ListItemIcon>
-            <ListItemText id={labelId} primary={item.text} />
+            <ListItemText primary={item.text} />
             <ListItemSecondaryAction>
               <IconButton
                 edge="end"
