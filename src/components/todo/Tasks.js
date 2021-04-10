@@ -8,9 +8,11 @@ import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { ToDoStore } from '../../lib/store/todo';
+import API from '../../lib/utils/fetcher';
 
 const Tasks = () => {
   const todos = ToDoStore(state => state.todos);
+  const { updateList } = ToDoStore.getState();
   const [checked, setChecked] = React.useState([0]);
 
   const handleToggle = (value) => () => {
@@ -26,6 +28,18 @@ const Tasks = () => {
     setChecked(newChecked);
   };
 
+  const removeTask = async (id) => {
+    await API.remove(id);
+    const all = await API.getAll();
+    updateList(all);
+  };
+
+  const markDone = async (item) => {
+    await API.update({ ...item, done: true });
+    const all = await API.getAll();
+    updateList(all);
+  }
+
   return (
     <List>
       {todos.map((item) => {
@@ -35,6 +49,7 @@ const Tasks = () => {
             <ListItemIcon>
               <Checkbox
                 edge="start"
+                onChange={() => markDone(item)}
                 // checked={checked.indexOf(item) !== -1}
                 tabIndex={-1}
                 disableRipple
@@ -43,7 +58,12 @@ const Tasks = () => {
             </ListItemIcon>
             <ListItemText id={labelId} primary={item.text} />
             <ListItemSecondaryAction>
-              <IconButton edge="end" aria-label="comments" color="secondary">
+              <IconButton
+                edge="end"
+                aria-label="comments"
+                color="secondary"
+                onClick={() => removeTask(item.id)}
+              >
                 <DeleteIcon />
               </IconButton>
             </ListItemSecondaryAction>

@@ -38,8 +38,8 @@ const API = {
     return await call(request);
   },
 
-  async update(id, data) {
-    const request = fetch(url, {
+  async update(data) {
+    const request = fetch(`${url}/${data.id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     });

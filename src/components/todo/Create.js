@@ -3,6 +3,8 @@ import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import API from '../../lib/utils/fetcher';
+import { ToDoStore } from '../../lib/store/todo';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -15,11 +17,15 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function Create() {
+  const { updateList } = ToDoStore.getState();
   const classes = useStyles();
   const [text, setText] = useState('');
 
-  const addToDo = () => {
-    console.log(text);
+  const addToDo = async () => {
+    await API.create({ text, done: false });
+    const all = await API.getAll();
+    updateList(all);
+    setText('');
   };
 
   return (
