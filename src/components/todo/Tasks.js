@@ -35,7 +35,7 @@ const Tasks = ({ tab }) => {
   };
 
   const markDone = async (item) => {
-    await API.update({ ...item, done: true });
+    await API.update({ ...item, done: !item.done });
     const all = await API.getAll();
     updateList(all);
   }
