@@ -1,4 +1,4 @@
-import {VanillaStore} from '../store/spinner';
+import { VanillaStore } from '../store/spinner';
 
 const url = 'https://60716a2a50aaea0017284a1a.mockapi.io/todos';
 
@@ -31,10 +31,11 @@ const API = {
   },
 
   async create(data) {
-    return await fetch(url, {
+    const request = fetch(url, {
       method: 'POST',
       body: JSON.stringify(data),
     });
+    return await call(request);
   },
 
   async update(id, data) {

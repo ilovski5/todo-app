@@ -7,19 +7,10 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-
-const tasks = [
-  {
-    id: 1,
-    text: 'First to do',
-  },
-  {
-    id: 2,
-    text: 'Second to do',
-  },
-];
+import { ToDoStore } from '../../lib/store/todo';
 
 const Tasks = () => {
+  const todos = ToDoStore(state => state.todos);
   const [checked, setChecked] = React.useState([0]);
 
   const handleToggle = (value) => () => {
@@ -37,7 +28,7 @@ const Tasks = () => {
 
   return (
     <List>
-      {tasks.map((item) => {
+      {todos.map((item) => {
         const labelId = `checkbox-list-label-${item.id}`;
         return (
           <ListItem key={item.id} dense button onClick={handleToggle(item)}>
